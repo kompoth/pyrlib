@@ -1,0 +1,15 @@
+# Byte-compiled / optimized / DLL files
+*/__pycache__/
+*.py[cod]
+
+# Thicc files
+reaclib.dat
+*.png
+
+# Distribution / packaging
+env/
+dist/
+build/
+*.egg-info/
+*.eggs/
+*.egg

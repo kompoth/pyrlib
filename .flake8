@@ -1,0 +1,2 @@
+[flake8]
+exclude=.git,build,dist,*.egg-info,*.eggs,env,__pycache__
