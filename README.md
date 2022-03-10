@@ -29,7 +29,6 @@ Classes
 
 TODO
 ----
-- Seems like some functions of `pyrlib` must be reimplemented on C. At least fitting.
 - Rework Rate:
   - Create BaseRate class.
   - Put Rate and RateFilter to different files.

@@ -1,6 +1,7 @@
 from .nucleus import Nucleus
 import numpy as np
 from scipy.optimize import curve_fit
+from typing import Iterable
 
 # Precalculations
 PRECAL_POW = [0] + [(2. * i - 5.) / 3. for i in range(1, 6)]
@@ -70,6 +71,13 @@ class Rate:
             elif not isinstance(nucl[i], Nucleus):
                 raise ValueError("Argument must be string or Nucleus.")
         return np.array(nucl)
+
+    @staticmethod
+    def __calc_ln_rval(T9: float, coefs: Iterable[float]) -> float:
+        rez = coefs[6] * np.log(T9)
+        for i in range(6):
+            rez += coefs[i] * np.power(T9, PRECAL_POW[i])
+        return rez
 
     @property
     def chapter(self):
@@ -161,7 +169,12 @@ class Rate:
                                      len(self.final) - 1]
         elif nuclei is not None and chapter is not None:
             nuclei = Rate.__handle_nuclei(nuclei)
-            self._initial, self._final = divide_nuclei(nuclei, chapter)
+            ini_n = None
+            try:
+                ini_n = INI_NUM[chapter - 1]
+            except KeyError:
+                raise ValueError("Unknown chapter: '{}'.".format(chapter))
+            self._initial, self._final = nuclei[:ini_n], nuclei[ini_n:]
             self._chapter = chapter
         elif not isinstance(self, RateFilter):
             raise ValueError("Reaction or initial and final nuclei or "
@@ -181,21 +194,30 @@ class Rate:
             # Setting constant rate
             self._a[0] = rvals
         elif isinstance(rvals, np.ndarray) and rvals.shape[1] == 2:
-            self._a = Rate.__fit_rvals(rvals)
+            self._a = Rate.__fit_rvals(rvals) 
+
         elif not isinstance(self, RateFilter):
             raise ValueError("Rate values must be float scalar for "
                              "constant rate or numpy ndarray T9 vs rate") 
+    
+    @staticmethod
+    def __fit_rvals(T9_vs_rval: np.ndarray) -> np.ndarray:
+        def fit_func(T9, a0, a1, a2, a3, a4, a5, a6):
+            coefs = [a0, a1, a2, a3, a4, a5, a6]
+            return Rate.__calc_ln_rval(T9, coefs) 
+        
+        rvals = np.log(T9_vs_rval[:, 1] + np.finfo(float).eps)
+        T9s = T9_vs_rval[:, 0]
+        fit, cov = curve_fit(fit_func, T9s, rvals)
+        return fit
 
     def ln_rval(self, T9):
         """
         Get REACLIB rate parameterization exponent value at given T9.
         """
-        if self.is_constant:
+        if self.is_constant():
             return self._a[0]
-        exp = self._a[6] * np.log(T9)
-        for i in range(6):
-            exp += self._a[i] * np.power(T9, PRECAL_POW[i])
-        return exp
+        return Rate.__calc_ln_rval(T9, self._a) 
 
     def rval(self, T9):
         """
@@ -332,15 +354,3 @@ def parse_reaction_natural(reaction: str):
     ini_nuc = [Nucleus(n) for n in ini_str.split(" + ")]
     fin_nuc = [Nucleus(n) for n in fin_str.split(" + ")]
     return np.array(ini_nuc), np.array(fin_nuc)
-
-
-def divide_nuclei(nuclei, chapter: int):
-    """
-    With given chapter return initial and final nuclei iterables.
-    """
-    ini_n = None
-    try:
-        ini_n = INI_NUM[chapter - 1]
-    except KeyError:
-        raise ValueError("Unknown chapter: '{}'.".format(chapter))
-    return nuclei[:ini_n], nuclei[ini_n:]
