@@ -50,7 +50,8 @@ class Nucleus:
                 raise ValueError("Failed to parse: '{}'".format(descr))
 
         if parse_results.group(2) != "":
-            raise MetaStableError("Meta stable states are not supported")
+            msg = "Meta stable states are not supported: '{}'.".format(descr)
+            raise MetaStableError(msg)
 
         element = parse_results.group(1).lower()
         # TODO: refactor
