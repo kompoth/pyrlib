@@ -1,6 +1,5 @@
 import unittest
 import os
-import numpy as np
 from pyrlib import Rate, RateFilter
 
 

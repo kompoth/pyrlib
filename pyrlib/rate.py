@@ -194,18 +194,18 @@ class Rate:
             # Setting constant rate
             self._a[0] = rvals
         elif isinstance(rvals, np.ndarray) and rvals.shape[1] == 2:
-            self._a, err = Rate.__fit_rvals(rvals) 
+            self._a, err = Rate.__fit_rvals(rvals)
             return err
         elif not isinstance(self, RateFilter):
             raise ValueError("Rate values must be float scalar for "
                              "constant rate or numpy ndarray T9 vs rate")
-    
+
     @staticmethod
     def __fit_rvals(T9_vs_rval: np.ndarray) -> np.ndarray:
         def fit_func(T9, a0, a1, a2, a3, a4, a5, a6):
             coefs = [a0, a1, a2, a3, a4, a5, a6]
-            return Rate.__calc_ln_rval(T9, coefs) 
-        
+            return Rate.__calc_ln_rval(T9, coefs)
+
         rvals = np.log(T9_vs_rval[:, 1] + np.finfo(float).eps)
         T9s = T9_vs_rval[:, 0]
 
@@ -220,7 +220,7 @@ class Rate:
         """
         if self.is_constant():
             return self._a[0]
-        return Rate.__calc_ln_rval(T9, self._a) 
+        return Rate.__calc_ln_rval(T9, self._a)
 
     def rval(self, T9):
         """
