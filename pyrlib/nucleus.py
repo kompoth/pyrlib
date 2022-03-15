@@ -121,6 +121,10 @@ class Nucleus:
         return self.A - self.Z
 
     @property
+    def element(self):
+        return Z_VS_EL[self.Z]
+
+    @property
     def name(self):
         return self.__repr__()
 

@@ -12,6 +12,12 @@ class TestNucleus(unittest.TestCase):
         self.assertEqual(nuc.Z, 26)
         self.assertEqual(nuc.N, 30)
 
+    def test_element_names(self):
+        for charge in range(126):
+            mass = charge * 2 if charge else 1
+            nuc = Nucleus(Z=charge, A=mass)
+            self.assertIsInstance(nuc.name, str)
+
     def test_tritium(self):
         nuc1 = Nucleus(A=3, Z=1)
         nuc2 = Nucleus("h3")
