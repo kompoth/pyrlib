@@ -7,20 +7,20 @@ def read(fname):
 
 
 setup(
-    name="pyrlib",
+    name="ratelib",
     version="0.1.0",
     description="Python interface to REACLIB databases",
     long_description=read("README.md"),
     long_description_content_type="text/markdown",
     keywords="nucleosynthesis astrophysics",
-    url="https://github.com/kompoth/pyrlib",
+    url="https://github.com/kompoth/ratelib",
     author="Vasily Negrebetskiy",
     author_email="negrebetckii.vv16@physics.msu.ru",
     license="MIT",
     license_files="LICENSE",
-    packages=["pyrlib"],
-    package_data={"pyrlib": ["data/*"]},
-    python_requires=">=3",
+    packages=["ratelib"],
+    package_data={"ratelib": ["data/*"]},
+    python_requires=">=3.5",
     install_requires=["numpy"],
     test_suite="test",
     classifiers=[

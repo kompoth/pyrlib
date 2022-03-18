@@ -5,22 +5,22 @@
 import sys
 import numpy as np
 import matplotlib.pyplot as plt
-import pyrlib as prl
+import ratelib as rlib
 
 
 # Prepare filter functions
-def is_decay(r: prl.Rate):
+def is_decay(r: rlib.Rate):
     return True if r.chapter in (1, 2, 3, 11) else False
 
 
 # Load REACLIB and filter weak decays
 try:
-    database = prl.Library(sys.argv[1])
+    database = rlib.Library(sys.argv[1])
 except (IndexError, FileNotFoundError):
     print("Please provide REACLIB database as argument")
     exit(1)
 
-rate_filter = prl.RateFilter(rtype="w", filter_function=is_decay)
+rate_filter = rlib.RateFilter(rtype="w", filter_function=is_decay)
 weak_decays = database.find_rates(rate_filter)
 
 # Create rate matrix

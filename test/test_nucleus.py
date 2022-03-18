@@ -1,5 +1,5 @@
 import unittest
-from pyrlib import Nucleus
+from ratelib import Nucleus
 
 
 class TestNucleus(unittest.TestCase):

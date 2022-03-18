@@ -1,5 +1,5 @@
-pyrlib
-======
+ratelib
+=======
 
 A simple interface to handle REACLIB format databases of astrophysical
 reaction rates.
@@ -11,14 +11,14 @@ Requirements
 ------------
 - Python 3.5+
 - numpy
+- scipy
 
 Installation
 ------------
-Default way to get `pyrlib` is to download it from PyPI:
+Default way to get `ratelib` is to download it from PyPI:
 ```
-  pip install pyrlib
+  pip install ratelib
 ```
-*PyPI repo disabled right now*
 
 Classes
 -------
@@ -26,10 +26,3 @@ Classes
 - **Rate:** Reaction rate class with properties from REACLIB format
 - **RateFilter:** Class for filtering rates in Library
 - **Nucleus:** Basic class to unify different nucleus denotions
-
-TODO
-----
-- Rework Rate:
-  - Create BaseRate class.
-  - Put Rate and RateFilter to different files.
-- Discribe all methods and classes.

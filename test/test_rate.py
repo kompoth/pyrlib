@@ -1,7 +1,7 @@
 import unittest
 import os
 import numpy as np
-from pyrlib import Rate, RateFilter
+from ratelib import Rate, RateFilter
 
 
 def readfile(file_path):
