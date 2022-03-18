@@ -15,10 +15,25 @@ Requirements
 
 Installation
 ------------
-Default way to get `ratelib` is to download it from PyPI:
+Package `ratelib` can be installed via `pip`:
 ```
   pip install ratelib
 ```
+You can also install the most recent version from the git repository with 
+following commands:
+```
+  git clone https://github.com/kompoth/raterlib
+  cd ratelib
+  python -m build
+  pip install dist/*.whl
+```
+
+Usage
+-----
+A simple script `example.py` is located in the root of the git repository.
+It loads a version of REACLIB, provided as the first argument, and draws
+a nuclei chart of weak decay rates at the temperature of 1 GK.
+This script requires `matplotlib >= 3.4`.
 
 Classes
 -------
