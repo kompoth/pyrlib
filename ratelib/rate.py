@@ -69,7 +69,7 @@ class Rate:
             if isinstance(nucl[i], str):
                 nucl[i] = Nucleus(nucl[i])
             elif not isinstance(nucl[i], Nucleus):
-                raise ValueError("Argument must be string or Nucleus.")
+                raise ValueError("Argument must be string or Nucleus")
         return np.array(nucl)
 
     @staticmethod
@@ -187,7 +187,7 @@ class Rate:
             try:
                 ini_n = INI_NUM[chapter - 1]
             except KeyError:
-                raise ValueError("Unknown chapter: '{}'.".format(chapter))
+                raise ValueError("Unknown chapter: '{}'".format(chapter))
             self._initial, self._final = nuclei[:ini_n], nuclei[ini_n:]
             self._chapter = chapter
         elif not isinstance(self, RateFilter):
@@ -207,7 +207,7 @@ class Rate:
         if isinstance(rvals, float):
             # Setting constant rate
             if np.isclose(rvals, 0.):
-                raise ValueError(f"Reaction should not have zero rate.")
+                raise ValueError("Reaction should not have zero rate")
             self._a[0] = np.log(rvals)
         elif isinstance(rvals, np.ndarray) and rvals.shape[1] == 2:
             self._a, err = Rate.__fit_rvals(rvals)

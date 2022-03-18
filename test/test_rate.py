@@ -44,6 +44,7 @@ class TestRate(unittest.TestCase):
         rvals = np.loadtxt(RATE1)[::20, :2]
         err = rate.init_by_values(reaction="tb180 + n -> tb181", rtype=" ",
                                   dset="cust", reverse=False, rvals=rvals)
+        self.assertTrue(err < 0.1)
 
     def test_filter(self):
         rate = Rate()
@@ -64,6 +65,7 @@ class TestRate(unittest.TestCase):
         # False
         r_f = RateFilter(final=["n"], exact=True)
         self.assertFalse(r_f.check_matches(rate))
+
 
 if __name__ == '__main__':
     unittest.main()
