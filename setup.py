@@ -8,7 +8,7 @@ def read(fname):
 
 setup(
     name="ratelib",
-    version="0.1.0",
+    version="0.1.1",
     description="Python interface to REACLIB databases",
     long_description=read("README.md"),
     long_description_content_type="text/markdown",
