@@ -1,5 +1,6 @@
 import unittest
 import os
+import numpy as np
 from pyrlib import Rate, RateFilter
 
 
@@ -15,6 +16,7 @@ DATA_DIR = os.path.join(TEST_DIR, "data")
 REAC1 = readfile(os.path.join(DATA_DIR, "reac1.reaclib"))
 REAC4 = readfile(os.path.join(DATA_DIR, "reac4.reaclib"))
 REAC11 = readfile(os.path.join(DATA_DIR, "reac11.reaclib"))
+RATE1 = readfile(os.path.join(DATA_DIR, "rate1.talys"))
 
 
 class TestRate(unittest.TestCase):
@@ -37,6 +39,12 @@ class TestRate(unittest.TestCase):
         rate.init_by_values(nuclei=["n", "p"], chapter=1, rtype="w", rvals=1.)
         self.assertTrue(rate.is_constant())
 
+    def test_fit(self):
+        rate = Rate()
+        rvals = np.loadtxt(RATE1)[::20, :2]
+        err = rate.init_by_values(reaction="tb180 + n -> tb181", rtype=" ",
+                                  dset="cust", reverse=False, rvals=rvals)
+
     def test_filter(self):
         rate = Rate()
         rate.init_by_lines(REAC4)
@@ -56,7 +64,6 @@ class TestRate(unittest.TestCase):
         # False
         r_f = RateFilter(final=["n"], exact=True)
         self.assertFalse(r_f.check_matches(rate))
-
 
 if __name__ == '__main__':
     unittest.main()
