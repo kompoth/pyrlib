@@ -172,6 +172,11 @@ class Rate:
         """
         Initialize rate by values.
         """
+        self._dset = dset
+        self._rtype = rtype
+        self._reverse = reverse
+        self._Q = Q
+
         if reaction is not None:
             self._initial, self._final = parse_reaction_natural(reaction)
             self._chapter = CHPT[len(self.initial) - 1, len(self.final) - 1]
@@ -198,22 +203,17 @@ class Rate:
         if self.final is not None:
             self._final = np.sort(self.final)
 
-        self._dset = dset
-        self._rtype = rtype
-        self._reverse = reverse
-        self._Q = Q
-
         self._a[:] = 0.
         if isinstance(rvals, float):
             # Setting constant rate
-            if np.isclose(rvals, 0.):
-                raise ValueError("Reaction should not have zero rate")
+            if np.isclose(rvals, 0.) or np.isnan(rvals):
+                raise ValueError("Reaction should not have zero or nan rate")
             self._a[0] = np.log(rvals)
         elif isinstance(rvals, np.ndarray) and rvals.shape[1] == 2:
             self._a, err = Rate.__fit_rvals(rvals)
             return err
         elif not isinstance(self, RateFilter):
-            raise ValueError("Rate values must be float scalar for "
+            raise ValueError("Rate values must be a float scalar for "
                              "constant rate or numpy ndarray T9 vs rate")
 
     def ln_rval(self, T9):
