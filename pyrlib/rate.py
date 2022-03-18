@@ -73,6 +73,20 @@ class Rate:
         return np.array(nucl)
 
     @staticmethod
+    def __fit_rvals(T9_vs_rval: np.ndarray) -> np.ndarray:
+        def fit_func(T9, a0, a1, a2, a3, a4, a5, a6):
+            coefs = [a0, a1, a2, a3, a4, a5, a6]
+            return Rate.__calc_ln_rval(T9, coefs)
+
+        rvals = np.log(T9_vs_rval[:, 1] + np.finfo(float).eps)
+        T9s = T9_vs_rval[:, 0]
+
+        fit, cov = curve_fit(fit_func, T9s, rvals)
+        f_vec = np.array([Rate.__calc_ln_rval(T9, fit) for T9 in T9s])
+        err = np.linalg.norm(rvals - f_vec) / np.linalg.norm(rvals)
+        return fit, err
+
+    @staticmethod
     def __calc_ln_rval(T9: float, coefs: Iterable[float]) -> float:
         rez = coefs[6] * np.log(T9)
         for i in range(6):
@@ -192,27 +206,15 @@ class Rate:
         self._a[:] = 0.
         if isinstance(rvals, float):
             # Setting constant rate
-            self._a[0] = rvals
+            if np.isclose(rvals, 0.):
+                raise ValueError(f"Reaction should not have zero rate.")
+            self._a[0] = np.log(rvals)
         elif isinstance(rvals, np.ndarray) and rvals.shape[1] == 2:
             self._a, err = Rate.__fit_rvals(rvals)
             return err
         elif not isinstance(self, RateFilter):
             raise ValueError("Rate values must be float scalar for "
                              "constant rate or numpy ndarray T9 vs rate")
-
-    @staticmethod
-    def __fit_rvals(T9_vs_rval: np.ndarray) -> np.ndarray:
-        def fit_func(T9, a0, a1, a2, a3, a4, a5, a6):
-            coefs = [a0, a1, a2, a3, a4, a5, a6]
-            return Rate.__calc_ln_rval(T9, coefs)
-
-        rvals = np.log(T9_vs_rval[:, 1] + np.finfo(float).eps)
-        T9s = T9_vs_rval[:, 0]
-
-        fit, cov = curve_fit(fit_func, T9s, rvals)
-        f_vec = np.array([Rate.__calc_ln_rval(T9, fit) for T9 in T9s])
-        err = np.linalg.norm(rvals - f_vec) / np.linalg.norm(rvals)
-        return fit, err
 
     def ln_rval(self, T9):
         """
@@ -269,7 +271,7 @@ class RateFilter(Rate):
                  exact=False, chapter=None, dset=None, rtype=None,
                  reverse=None, filter_function=None):
         if nuclei is not None and chapter is None:
-            raise ValueError("If nuclei is given, chapter is also needed.")
+            raise ValueError("If nuclei are given, chapter is also needed")
         super().__init__()
         self.init_by_values(reaction=reaction, initial=initial, final=final,
                             nuclei=nuclei, chapter=chapter, dset=dset,
@@ -339,7 +341,7 @@ def parse_reaction_reaclib(reaction: str, chapter: int):
         ini_l = INI_LEN[chapter - 1]
         fin_l = FIN_LEN[chapter - 1]
     except KeyError:
-        raise ValueError("Unknown chapter: '{}'.".format(chapter))
+        raise ValueError("Unknown chapter: '{}'".format(chapter))
     ini_str = reaction[:ini_l]
     fin_str = reaction[ini_l:tot_l]
     ini_nuc = [Nucleus(ini_str[i:i + 5]) for i in range(0, ini_l, 5)]
