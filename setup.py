@@ -21,7 +21,7 @@ setup(
     packages=["ratelib"],
     package_data={"ratelib": ["data/*"]},
     python_requires=">=3.5",
-    install_requires=["numpy"],
+    install_requires=["numpy", "scipy"],
     test_suite="test",
     classifiers=[
         "Development Status :: 2 - Pre-Alpha",
