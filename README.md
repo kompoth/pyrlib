@@ -22,7 +22,7 @@ Package `ratelib` can be installed via `pip`:
 You can also install the most recent version from the git repository with 
 following commands:
 ```
-  git clone https://github.com/kompoth/raterlib
+  git clone https://github.com/kompoth/ratelib
   cd ratelib
   python -m build
   pip install dist/*.whl
