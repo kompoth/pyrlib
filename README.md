@@ -33,7 +33,8 @@ Usage
 A simple script `example.py` is located in the root of the git repository.
 It loads a version of REACLIB, provided as the first argument, and draws
 a nuclei chart of weak decay rates at the temperature of 1 GK.
-This script requires `matplotlib >= 3.4`.
+
+This script requires `matplotlib>=3.4`.
 
 Classes
 -------
