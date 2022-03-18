@@ -39,15 +39,15 @@ class Library:
     def add_rate(self, r: Rate):
         r_id = hash(r)
         if r_id in self._rates:
-            raise ValueError("Rate '{}' with the same hash already "
-                             "exists in library.".format(r))
+            msg = "Rate '{}' already exists in library.".format(r)
+            raise ValueError(msg)
         self._rates[r_id] = r
 
     def pop_rate(self, r: Rate):
         r_id = hash(r)
         if r_id not in self._rates:
-            raise ValueError("Rate '{}' with the same hash does not"
-                             "exist in collection.".format(r))
+            msg = "Rate '{}' does not exist in library.".format(r)
+            raise ValueError(msg)
         return self._rates.pop(r_id)
 
     def find_rates(self, rate_filter: RateFilter):
