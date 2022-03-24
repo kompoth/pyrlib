@@ -11,26 +11,26 @@ class Library:
             self.load(path)
 
     def load(self, rlib_file: str):
-        fd = open(rlib_file, "r")
-        line_num = 0
-        while True:
-            lines = [fd.readline()]
-            line_num += 1
-            if not lines[0]:
-                break
-            for i in range(3):
-                lines.append(fd.readline())
+        with open(rlib_file, "r") as fd:
+            line_num = 0
+            while True:
+                lines = [fd.readline()]
                 line_num += 1
-                if not lines[-1]:
-                    raise ValueError("Unexpected EOF at '" +
-                                     rlib_file + ":" + str(line_num) + "'.")
-            r = Rate()
-            try:
-                r.init_by_lines(lines)
-            except MetaStableError:
-                # Ignore meta stable entries
-                continue
-            self.add_rate(r)
+                if not lines[0]:
+                    break
+                for i in range(3):
+                    lines.append(fd.readline())
+                    line_num += 1
+                    if not lines[-1]:
+                        msg = f"Unexpected EOF at {rlib_file}:{line_num}"
+                        raise ValueError(msg)
+                r = Rate()
+                try:
+                    r.init_by_lines(lines)
+                except MetaStableError:
+                    # Ignore meta stable entries
+                    continue
+                self.add_rate(r)
 
     @property
     def rates(self):
